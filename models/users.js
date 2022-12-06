@@ -13,12 +13,13 @@ const userSchema = new Schema(
             required:true,
             trimmed: true,
             unique: true,
+            match: /.+\@.+\..+/,
         },
         thoughts: {
-            // array of _id
+            // Array of _id values referencing the Thought mod
         },
         friends: {
-            // array of _id
+            // Array of _id values referencing the User model (self-reference)
         },
     }
 );

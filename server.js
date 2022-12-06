@@ -25,6 +25,16 @@ app.get("/read-thoughts", (req, res) => {
     });
 });
 
+app.get("/read-reactions", (req, res) => {
+  db.collection("reactions")
+    .find({})
+    .toArray((err, results) => {
+      if (err) throw err;
+      res.send(results);
+    });
+});
+
+
 // create routes
 app.post("/create-user/:username/:email", (req, res) => {
   const newUser = new User({

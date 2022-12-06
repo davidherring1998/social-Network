@@ -1,10 +1,11 @@
 const connection = require("../config/connection");
-const { User, Thoughts } = require("../models");
+const { User, Thoughts, Reactions } = require("../models");
 
 connection.once("open", async () => {
   // Delete the entries in the collection
   await User.deleteMany({});
   await Thoughts.deleteMany({});
+  await Reactions.deleteMany({});
 
   await User.insertMany([
     { userName: "david_herring", email: "userone@gmail.com" },
@@ -29,4 +30,18 @@ connection.once("open", async () => {
     if (err) throw err;
     console.log("Thoughts data has been inserted.");
   });
+
+
+ await Reactions.insertMany([
+  { reactionBody: "red.", thoughts:"thoughtOne" },
+  { reactionBody: "everything..", thoughts:"thoughtTwo" },
+  { reactionBody: "wished", thoughts:"thoughtThree" },
+  { reactionBody: "future.", thoughts:"thoughtFour"},
+  { reactionBody: "hole.", thoughts:"thoughtFive"},
+  { reactionBody: "twinkling.", thoughts:"thoughtSix" },
+]).then((user, err) => {
+  if (err) throw err;
+  console.log("Reaction data has been inserted.");
 });
+});
+
