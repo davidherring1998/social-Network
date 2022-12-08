@@ -20,7 +20,7 @@ connection.once("open", async () => {
   });
 
   await Thoughts.insertMany([
-    { thoughtText: "I love the color red." },
+    { thoughtText: "I love the color red."},
     { thoughtText: "Malls are great places to shop; I can find everything I need under one roof." },
     { thoughtText: "Jeanne wished she has chosen the red button." },
     { thoughtText: "The wake behind the boat told of the past while the open sea for told life in the unknown future." },
@@ -30,18 +30,5 @@ connection.once("open", async () => {
     if (err) throw err;
     console.log("Thoughts data has been inserted.");
   });
-
-
- await Reactions.insertMany([
-  { reactionBody: "red.", thoughts:"thoughtOne" },
-  { reactionBody: "everything..", thoughts:"thoughtTwo" },
-  { reactionBody: "wished", thoughts:"thoughtThree" },
-  { reactionBody: "future.", thoughts:"thoughtFour"},
-  { reactionBody: "hole.", thoughts:"thoughtFive"},
-  { reactionBody: "twinkling.", thoughts:"thoughtSix" },
-]).then((user, err) => {
-  if (err) throw err;
-  console.log("Reaction data has been inserted.");
-});
 });
 
