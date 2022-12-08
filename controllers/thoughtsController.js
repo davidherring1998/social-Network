@@ -23,8 +23,8 @@ router.get("/:id", (req, res) => {
 });
 
 // creates a thought
-router.post("/:thoughtText", (req, res) => {
-  const newThought = new Thoughts({ thoughtText: req.params.thoughtText });
+router.post("/:username/:text", (req, res) => {
+  const newThought = new Thoughts({ userName: req.params.username,thoughtText: req.params.text });
   newThought.save();
   if (newThought) {
     res.status(200).json(newThought);
