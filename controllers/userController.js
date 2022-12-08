@@ -1,29 +1,66 @@
-const { users } = require("../models");
+const router = require("express").Router();
+const { User } = require("../models");
+const db = require("../config/connection");
 
-module.exports = {
-  // create user
-  createUser(req, res) {
-    users
-      .create(req.body)
-      .then((user) => res.json(user))
-      .catch((err) => res.status(500).json(err));
-  },
+// gets all users
+router.get("/", (req, res) => {
+  db.collection("users")
+    .find({})
+    .toArray((err, results) => {
+      if (err) throw err;
+      res.send(results);
+    });
+});
 
-  // get single user
-  getSingleUser(req, res) {
-    users
-      .post({ _id: req.params.postId })
-      .populate({ path: "tags", select: "-__v" })
-      .then((user) => res.json(user))
-      .catch((err) => res.status(500).json(err));
-  },
+// gets one user by id
+router.get("/:userId", (req, res) => {
+  User.findOne({ _id: req.params.userId })
+    .select("-__v")
+    .then((user) => {
+      res.send(user);
+    })
+    .catch((err) => console.log(err));
+});
 
-  // get all users
-  getUsers(req, res) {
-    users
-      .find()
-      .populate({ path: "tags", select: "-__v" })
-      .then((users) => res.json(users))
-      .catch((err) => res.status(500).json(err));
-  },
-};
+// creates user
+router.post("/:username/:email", (req, res) => {
+  const newUser = new User({
+    userName: req.params.username,
+    email: req.params.email,
+  });
+  newUser.save();
+  if (newUser) {
+    res.status(200).json(newUser);
+  } else {
+    console.log("something went wrong!");
+    res.status(500).json({ message: "something went wrong." });
+  }
+});
+
+// add a put method to update by id
+router.put("/:userId", (req, res) => {
+  User.findOneAndUpdate(
+    { _id: req.params.userId },
+    { $set: req.body },
+    { runValidators: true, new: true }
+  )
+    .then((userUpdate) => {
+      res.send(userUpdate);
+      console.log("user update successful.");
+    })
+    .catch((err) => console.log(err));
+});
+
+// add a delete method to remove by id
+router.delete("/:userId", (req, res) => {
+  User.findOneAndDelete({ _id: req.params.userId })
+    .then((user) =>
+      !user
+        ? res.status(404).json({ message: "No user with that ID" })
+        : User.deleteMany({ _id: { $in: user.users } })
+    )
+    .then(() => res.json({ message: "User deleted!" }))
+    .catch((err) => res.status(500).json(err));
+});
+
+module.exports = router;
